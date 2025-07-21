@@ -1,26 +1,17 @@
-import { fromHono } from "chanfana";
-import { Hono } from "hono";
-import { TaskCreate } from "./endpoints/taskCreate";
-import { TaskDelete } from "./endpoints/taskDelete";
-import { TaskFetch } from "./endpoints/taskFetch";
-import { TaskList } from "./endpoints/taskList";
+import net from "node:net";
 
-// Start a Hono app
-const app = new Hono<{ Bindings: Env }>();
+const exampleIP = "127.0.0.1";
 
-// Setup OpenAPI registry
-const openapi = fromHono(app, {
-	docs_url: "/",
-});
+export default {
+  async fetch(req): Promise<Response> {
+    const socket = new net.Socket();
+    socket.connect(4000, exampleIP, function () {
+      console.log("Connected");
+    });
 
-// Register OpenAPI endpoints
-openapi.get("/api/tasks", TaskList);
-openapi.post("/api/tasks", TaskCreate);
-openapi.get("/api/tasks/:taskSlug", TaskFetch);
-openapi.delete("/api/tasks/:taskSlug", TaskDelete);
+    socket.write("Hello, Server!");
+    socket.end();
 
-// You may also register routes for non OpenAPI directly on Hono
-// app.get('/test', (c) => c.text('Hono!'))
-
-// Export the Hono app
-export default app;
+    return new Response("Wrote to server", { status: 200 });
+  },
+} satisfies ExportedHandler;

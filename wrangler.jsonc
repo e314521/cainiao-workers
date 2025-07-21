@@ -6,6 +6,7 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "cainiao-workers",
 	"main": "src/index.ts",
+	"compatibility_flags": ["nodejs_compat_v2"],
 	"compatibility_date": "2025-07-19",
 	"observability": {
 		"enabled": true
