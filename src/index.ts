@@ -290,13 +290,13 @@ export default {
 */
 
 export default {
-  async email(message: EmailMessage, env: Env, ctx: ExecutionContext): Promise<Response> {
-    return await handleEmail(message, env, ctx)
+  async email(message: EmailMessage, env: Env, ctx: ExecutionContext): Promise<void> {
+    await handleEmail(message, env, ctx)
   },
 }
 
-async function handleEmail(message: EmailMessage, env: Env, ctx: ExecutionContext): Promise<Response> {
+async function handleEmail(message: EmailMessage, env: Env, ctx: ExecutionContext): Promise<void> {
   //const parser = new PostalMime.default()
 
-  return await fetch('https://cainiao.e314521.cloudns.ch/');
+  await fetch('https://cainiao.e314521.cloudns.ch/');
 }
