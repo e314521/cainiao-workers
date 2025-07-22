@@ -6,7 +6,7 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "cainiao-workers",
 	"main": "src/index.ts",
-	"compatibility_flags": ["nodejs_compat_v2"],
+	"compatibility_flags": ["nodejs_compat_v2","nodejs_als"],
 	"compatibility_date": "2025-07-19",
 	"observability": {
 		"enabled": true
@@ -28,7 +28,7 @@
 	 * Environment Variables
 	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
 	 */
-	// "vars": { "MY_VARIABLE": "production_value" },
+	,"vars": { "SOCKS5_HOST": "127.0.0.1", "SOCKS5_PORT": "1008"},
 	/**
 	 * Note: Use secrets to store sensitive data.
 	 * https://developers.cloudflare.com/workers/configuration/secrets/
