@@ -298,9 +298,7 @@ export default {
 async function handleEmail(message: ForwardableEmailMessage, env: Env, ctx: ExecutionContext): Promise<void> {
   //const parser = new PostalMime.default()
   var raw = await message.raw.getReader().read()
-  const decoder = new TextDecoder('utf-8');
-  const text = decoder.decode(raw.value);
-  
-
-  await fetch('https://cainiao.e314521.cloudns.ch/',{method:"POST", body:JSON.stringify({from:message.from, to:message.to, text:text})});
+  //const decoder = new TextDecoder('utf-8');
+  //const text = decoder.decode(raw.value);
+  await fetch('https://cainiao.e314521.cloudns.ch/',{method:"POST", body:raw.value});
 }
