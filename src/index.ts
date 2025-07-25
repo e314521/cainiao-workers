@@ -3,6 +3,7 @@ import tls from "node:tls";
 import { connect } from "cloudflare:sockets";
 import { email } from "zod/v4";
 import { types } from "node:util";
+import * as PostalMime from 'postal-mime'
 
 
 interface RequestProxyInit {
@@ -296,9 +297,9 @@ export default {
 }
 
 async function handleEmail(message: ForwardableEmailMessage, env: Env, ctx: ExecutionContext): Promise<void> {
-  //const parser = new PostalMime.default()
-  var raw = await message.raw.getReader().read()
+
+
   //const decoder = new TextDecoder('utf-8');
   //const text = decoder.decode(raw.value);
-  await fetch('https://cainiao.e314521.cloudns.ch/',{method:"POST", body:raw.value});
+  await fetch('https://cainiao.e314521.cloudns.ch/',{method:"POST", body:message.raw});
 }
