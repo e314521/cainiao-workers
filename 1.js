@@ -10,13 +10,24 @@ const options = {
 
 // 创建 HTTPS 服务器
 const server = https.createServer(options, (req, res) => {
-  // 设置响应头
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
+   if (req.method === 'POST') {
+    let body = '';
 
-  console.log(req)
+    // 接收数据块
+    req.on('data', chunk => {
+      body += chunk.toString(); // 将 Buffer 转换为字符串
+    });
 
-  // 发送响应内容
-  res.end('Hello, secure world!\n');
+    // 数据接收完毕
+    req.on('end', () => {
+      console.log('POST body: ', body);
+      res.writeHead(200, {'Content-Type': 'text/plain'});
+      res.end('Received your POST request.\n');
+    });
+  } else {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end('Hello, world!\n');
+  }
 });
 
 // 监听端口
