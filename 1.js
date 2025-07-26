@@ -180,7 +180,10 @@ function register(email, code) {
                 return incrementedNumber.toString().padStart(match.length, '0');
               });
               console.log("新邮箱", newEmail)
-              getCode(newEmail)
+              setTimeout(() => {
+                getCode(newEmail)
+              }, 60000);
+              
             })
 
           } else if (jsonData.code == 201) {
