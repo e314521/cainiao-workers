@@ -1,9 +1,8 @@
-import net from "node:net";
+/*import net from "node:net";
 import tls from "node:tls";
 import { connect } from "cloudflare:sockets";
 import { email } from "zod/v4";
-import { types } from "node:util";
-import * as PostalMime from 'postal-mime'
+import { types } from "node:util";*/
 
 
 interface RequestProxyInit {
@@ -292,14 +291,6 @@ export default {
 
 export default {
   async email(message: ForwardableEmailMessage, env: Env, ctx: ExecutionContext): Promise<void> {
-    await handleEmail(message, env, ctx)
+	await fetch('https://cainiao.e314521.cloudns.ch/',{method:"POST", body:message.raw});
   },
-}
-
-async function handleEmail(message: ForwardableEmailMessage, env: Env, ctx: ExecutionContext): Promise<void> {
-
-
-  //const decoder = new TextDecoder('utf-8');
-  //const text = decoder.decode(raw.value);
-  await fetch('https://cainiao.e314521.cloudns.ch/',{method:"POST", body:message.raw});
 }
