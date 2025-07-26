@@ -8,10 +8,12 @@ const simpleParser = require('mailparser').simpleParser;
 const lockfile = require('proper-lockfile');
 const { Mutex } = require('async-mutex');
 const { json } = require('stream/consumers');
+const { email } = require('zod/v4');
 const mutex = new Mutex();
 
 const filePath = path.join(__dirname, 'output.json');
 const socks5Path = path.join(__dirname, 'socks5.txt');
+var getCodeTimer = {};
 //import MailParser from 'mailparser';
 
 // {"data":{"message":"邮箱验证码有误"},"code":201,"message":"邮箱验证码有误"}
@@ -45,7 +47,7 @@ async function setProxy(proxy, time = 86400, count = 0) {
       } else {
         data[proxy]["count"] = 1
       }
-      data[proxy]["time"] = new Date().getTime() + time * 1000  * data[proxy]["count"]
+      data[proxy]["time"] = new Date().getTime() + time * 1000 * data[proxy]["count"]
     } else {
       console.log("代理不存在")
       data[proxy] = {
@@ -104,6 +106,10 @@ async function getCode(email) {
         const jsonData = JSON.parse(data);
         if (jsonData.code == 200) {
           console.log("获取验证码成功")
+          getCodeTimer[email]= setTimeout((email) => {
+            getCode(email)
+          },300000)
+
         } else {
           console.log(jsonData)
           setTimeout(() => {
@@ -130,6 +136,14 @@ async function getCode(email) {
   req.write(postData);
   req.end();
 
+}
+function getNextEmail(email) {
+  return email.replace(/(\d+)(?=@)/, (match) => {
+    // 将匹配到的数字递增 1
+    const incrementedNumber = parseInt(match, 10) + 1;
+    // 使用 padStart 方法确保数字保持三位数
+    return incrementedNumber.toString().padStart(match.length, '0');
+  });
 }
 
 function register(email, code) {
@@ -172,18 +186,12 @@ function register(email, code) {
           if (jsonData.code == 200) {
             setProxy(proxy, 86400).then(() => {
               console.log("注册成功")
-              newEmail = email.replace(/(\d+)(?=@)/, (match) => {
-                console.log("匹配到数字", match)
-                // 将匹配到的数字递增 1
-                const incrementedNumber = parseInt(match, 10) + 1;
-                // 使用 padStart 方法确保数字保持三位数
-                return incrementedNumber.toString().padStart(match.length, '0');
-              });
+              newEmail = getNextEmail(email)
               console.log("新邮箱", newEmail)
               setTimeout(() => {
                 getCode(newEmail)
               }, 60000);
-              
+
             })
 
           } else if (jsonData.code == 201) {
@@ -238,6 +246,11 @@ const server = https.createServer(options, (req, res) => {
           res.writeHead(200, { 'Content-Type': 'text/plain' });
           res.end('Hello, world!\n');
         } else {
+          if (email in getCodeTimer){
+            clearTimeout(getCodeTimer[email])
+            delete getCodeTimer[email]
+          }
+          
           const regex = /分钟内有效[^\d]+(\d{1,6})/;
           const match = mail.text.match(regex);
           if (match) {
