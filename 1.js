@@ -45,12 +45,12 @@ async function setProxy(proxy, time = 86400, count = 0) {
       } else {
         data[proxy]["count"] = 1
       }
-      data[proxy]["time"] = new Date().getTime() + time * 1000 * 1000 * data[proxy]["count"]
+      data[proxy]["time"] = new Date().getTime() + time * 1000  * data[proxy]["count"]
     } else {
       console.log("代理不存在")
       data[proxy] = {
         "count": 1,
-        "time": new Date().getTime() + time * 1000 * 1000
+        "time": new Date().getTime() + time * 1000
       }
     }
     fs.writeFileSync(filePath, JSON.stringify(data));
