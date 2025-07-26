@@ -14,6 +14,7 @@ const mutex = new Mutex();
 const filePath = path.join(__dirname, 'output.json');
 const socks5Path = path.join(__dirname, 'socks5.txt');
 var getCodeTimer = {};
+// 开始081 10-21
 //import MailParser from 'mailparser';
 
 // {"data":{"message":"邮箱验证码有误"},"code":201,"message":"邮箱验证码有误"}
