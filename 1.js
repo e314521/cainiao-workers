@@ -204,7 +204,7 @@ function register(email, code) {
     req.on('error', (err) => {
       if (err instanceof SocksClientError) {
         console.log("代理错误")
-        setProxy(proxy, 60, 1).then(() => {
+        setProxy(proxy, 6000, 1).then(() => {
           register(email, code)
         })
       } else {
